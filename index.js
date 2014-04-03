@@ -194,6 +194,10 @@ module.exports = function(params)
     }, callback);
   };
 
+  var getClientByKeyword = function (keyword, callback) {
+    db.clients.findByKeyword(keyword, callback);
+  };
+  module.getClientByKeyword = getClientByKeyword;
   module.getSensuDevices = getSensuDevices;
   module.getSensuEvents = getSensuEvents;
   initialize(function(err, reply) {
