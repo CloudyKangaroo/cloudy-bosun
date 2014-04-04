@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var async = require('async');
-
+var leads = [];
 var events = require('events');
 var Emitter = new events.EventEmitter;
 var db = require('./lib/db');
@@ -145,6 +145,23 @@ module.exports = function(params)
     callback(null, {status: true, error_code: '', error_message: '', data: getRandomInt(900200, 900800)});
   };
 
+  var submitNewLead = function(first, last, company, email, address, city, state, zip, country, phone, callback) {
+    var postData = {
+      first: req.body.firstname,
+      last: req.body.lastname,
+      email: req.body.email,
+      phone: req.body.phone,
+      address: req.body.address,
+      city: req.body.city,
+      state: req.body.state,
+      zip: req.body.zip,
+      country: req.body.county,
+      active: 2
+    };
+    leads.push(postData);
+    callback(null, leads.length -1);
+  }
+
   var getAdminByEmail = function(email, callback) {
     if (email) {
       db.admins.findByEmail(email, function (err, admin) {
@@ -155,6 +172,14 @@ module.exports = function(params)
        callback(err, admin);
      });
     }
+  };
+
+  var getLeads = function (callback) {
+    db.clients.findByKeyword('innovate', callback);
+  };
+
+  var getClientComments = function (clientid, callback) {
+    db.clients.findByKeyword('innovate', callback);
   };
 
   module.getDeviceByID = getDeviceByID;
@@ -169,9 +194,12 @@ module.exports = function(params)
   module.getTicketbyTicketID = getTicketbyTicketID;
   module.getClientByID = getClientByID;
   module.getClients = getClients;
+  module.getClientComments = getClientComments;
   module.getDeviceHostnames = getDeviceHostnames;
   module.getContactsbyClientID = getContactsbyClientID;
   module.getContactbyContactID = getContactbyContactID;
+  module.getLeads = getLeads;
+  module.submitNewLead = submitNewLead;
   //module.getAdmins = getAdmins;
   //module.getAPIMethods = getAPIMethods;
   //module.postItemToUbersmith = postItemToUbersmith;
